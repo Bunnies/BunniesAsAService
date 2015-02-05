@@ -49,4 +49,4 @@ api.add_resource(RandomBunnyGIF, '/v1/gif/')
 api.add_resource(BunnyGIF, '/v1/gif/<string:specified_bunny_id>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, port=5050)

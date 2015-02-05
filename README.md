@@ -2,7 +2,7 @@
 A provider of bunnies, through a REST service.
 
 ## License
-This project is licensed under the BSD 2-clause license.
+The source of this project is provided, subject to the BSD 2-clause license.
 
 Copyright (c) 2015, Sky Welch
 All rights reserved.

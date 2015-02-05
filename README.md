@@ -7,6 +7,7 @@ A provider of bunnies, through a REST service.
 
 * Use Flask, Flask-RESTful
 * Keep it simple
+* Use Python 3
 * Gifs first using existing stuff from bunnies.io
 * SSL only
 * Major version in the URL (`/v1/bunny/gif/random`)

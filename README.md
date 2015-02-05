@@ -1,2 +1,2 @@
-# BunniesAsAService
-A provider of bunnies, as a REST service.
+# Bunnies As A Service
+A provider of bunnies, through a REST service.

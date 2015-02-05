@@ -4,5 +4,7 @@ bin
 lib
 include
 
+*.idea
+
 # OS X
 .DS_Store

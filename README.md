@@ -18,6 +18,8 @@ A provider of bunnies, through a REST service.
 * Gzip output
 * Rate limiting (429 Too Many Requests) - (include functional limits in response somewhere, maybe headers?)
 * Make sure it's cacheable
+* Each bunny is a resource, with an ID - REST API returns a link (or multiple links) to these resources
+ * Need to think about adding metadata to each resource too
 
 This is quite a nice source of 'good' (ie: what I agree with at face value) REST practices: http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
 

@@ -6,16 +6,17 @@ import random
 
 app = Flask(__name__)
 api = restful.Api(app)
-limiter = Limiter(app, global_limits = ["1 per second"])
+limiter = Limiter(app, global_limits=["1 per second"])
 
-bunny_gifs = { }
+bunny_gifs = {}
 
-for bunny_id in range(1, 37):
-    bunny_gifs[str(bunny_id)] = 'http://bunnies.io/bunnies/' + str(bunny_id) + '.gif'
+for existing_bunny_id in range(1, 37):
+    bunny_gifs[str(existing_bunny_id)] = 'http://bunnies.io/bunnies/' + str(existing_bunny_id) + '.gif'
 
-def isIDSane(id):
+
+def is_bunny_id_sane(bunny_id):
     try:
-        s = id.decode('ascii')
+        s = bunny_id.decode('ascii')
         if len(s) <= 8 and s.isalnum():
             return True
     except UnicodeDecodeError:
@@ -23,24 +24,26 @@ def isIDSane(id):
 
     return False
 
+
 class BunnyGIF(restful.Resource):
     def get(self, specified_bunny_id):
-        if not isIDSane(specified_bunny_id):
-            return { 'error': 'Bad ID format' }, 400
+        if not is_bunny_id_sane(specified_bunny_id):
+            return {'error': 'Bad ID format'}, 400
 
         if specified_bunny_id in bunny_gifs:
-            return { specified_bunny_id: bunny_gifs[specified_bunny_id] }
+            return {specified_bunny_id: bunny_gifs[specified_bunny_id]}
 
-        return { 'error': 'Bunny ID not found' }, 400
+        return {'error': 'Bunny ID not found'}, 400
+
 
 class RandomBunnyGIF(restful.Resource):
     def get(self):
         bunny_id_list = random.sample(bunny_gifs, 1)
         if bunny_id_list is not None:
             random_bunny_id = bunny_id_list[0]
-            return { random_bunny_id: bunny_gifs[random_bunny_id] }
+            return {random_bunny_id: bunny_gifs[random_bunny_id]}
         else:
-            return { 'error': 'Failed to select a random bunny GIF' }, 500
+            return {'error': 'Failed to select a random bunny GIF'}, 500
 
 api.add_resource(RandomBunnyGIF, '/v1/gif/')
 api.add_resource(BunnyGIF, '/v1/gif/<string:specified_bunny_id>')

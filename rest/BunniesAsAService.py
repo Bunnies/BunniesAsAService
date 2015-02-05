@@ -1,10 +1,12 @@
 from flask import Flask
 from flask.ext import restful
+from flask_limiter import Limiter
 
 import random
 
 app = Flask(__name__)
 api = restful.Api(app)
+limiter = Limiter(app, global_limits = ["1 per second"])
 
 bunny_gifs = { }
 

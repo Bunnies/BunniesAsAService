@@ -36,7 +36,7 @@ If using PyCharm, make sure to set the Project Interpreter to the virtualenv at 
 ## License
 The source of this project is provided, subject to the BSD 2-clause license.
 
-Copyright (c) 2015, Sky Welch
+Copyright © 2015, Sky Welch
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

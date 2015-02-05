@@ -1,5 +1,14 @@
 # :rabbit: As A Service
+
+## Introduction
 A provider of bunnies, through a REST service.
+
+## Thoughts
+
+* Use Flask
+* Keep it simple
+* Gifs first using existing stuff from bunnies.io
+* Swagger for REST documentation
 
 ## License
 The source of this project is provided, subject to the BSD 2-clause license.

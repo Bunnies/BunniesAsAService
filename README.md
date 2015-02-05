@@ -8,7 +8,17 @@ A provider of bunnies, through a REST service.
 * Use Flask, Flask-RESTful
 * Keep it simple
 * Gifs first using existing stuff from bunnies.io
+* SSL only
+* Major version in the URL (`/v1/bunny/gif/random`)
 * Swagger for REST documentation
+* JSON only responses
+* Camel case only
+* Pretty print output
+* Gzip output
+* Rate limiting (429 Too Many Requests) - (include functional limits in response somewhere, maybe headers?)
+* Make sure it's cacheable
+
+This is quite a nice source of 'good' (ie: what I agree with at face value) REST practices: http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
 
 ## License
 The source of this project is provided, subject to the BSD 2-clause license.

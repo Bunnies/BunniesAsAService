@@ -31,7 +31,7 @@ class BunnyGIF(restful.Resource):
             return {'error': 'Bad ID format'}, 400
 
         if specified_bunny_id in bunny_gifs:
-            return {specified_bunny_id: bunny_gifs[specified_bunny_id]}
+            return {'location': bunny_gifs[specified_bunny_id], 'id': specified_bunny_id}
 
         return {'error': 'Bunny ID not found'}, 400
 
@@ -41,7 +41,7 @@ class RandomBunnyGIF(restful.Resource):
         bunny_id_list = random.sample(bunny_gifs, 1)
         if bunny_id_list is not None:
             random_bunny_id = bunny_id_list[0]
-            return {random_bunny_id: bunny_gifs[random_bunny_id]}
+            return {'location': bunny_gifs[random_bunny_id], 'id': random_bunny_id}
         else:
             return {'error': 'Failed to select a random bunny GIF'}, 500
 

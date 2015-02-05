@@ -23,6 +23,16 @@ A provider of bunnies, through a REST service.
 
 This is quite a nice source of 'good' (ie: what I agree with at face value) REST practices: http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
 
+## Setup
+* Clone the repository,
+* Go in to the `rest` folder,
+* Run `virtualenv env`,
+* Run `source env/bin/activate`,
+* Run `pip3 install -r requirements.txt`
+* Run `python3 BunniesAsAService.py`
+
+If using PyCharm, make sure to set the Project Interpreter to the virtualenv at `rest/env`
+
 ## License
 The source of this project is provided, subject to the BSD 2-clause license.
 

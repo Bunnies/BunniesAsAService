@@ -1,8 +1,5 @@
 # Virtualenv
-.Python
-bin
-lib
-include
+env
 
 # OS X
 .DS_Store

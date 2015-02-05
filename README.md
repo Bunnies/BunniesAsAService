@@ -5,7 +5,7 @@ A provider of bunnies, through a REST service.
 
 ## Thoughts
 
-* Use Flask
+* Use Flask, Flask-RESTful
 * Keep it simple
 * Gifs first using existing stuff from bunnies.io
 * Swagger for REST documentation

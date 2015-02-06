@@ -3,6 +3,8 @@
 ## Introduction
 A provider of bunnies, through a REST service.
 
+You can see the results at http://bunnies.io
+
 ## Thoughts
 
 * Use Flask, Flask-RESTful

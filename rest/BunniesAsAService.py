@@ -11,7 +11,7 @@ limiter = Limiter(app, global_limits=["5 per second"])
 bunny_gifs = {}
 
 for existing_bunny_id in range(1, 51):
-    bunny_gifs[str(existing_bunny_id)] = 'http://bunnies.io/bunnies/' + str(existing_bunny_id) + '.gif'
+    bunny_gifs[str(existing_bunny_id)] = 'https://bunnies.io/bunnies/' + str(existing_bunny_id) + '.gif'
 
 
 def is_bunny_id_sane(bunny_id):

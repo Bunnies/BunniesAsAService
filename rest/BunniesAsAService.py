@@ -1,12 +1,14 @@
-from flask import Flask
+from flask import Flask, request
 from flask.ext import restful
 from flask_limiter import Limiter
+from werkzeug.contrib.fixers import ProxyFix
 
 import random
 
 app = Flask(__name__)
 api = restful.Api(app)
 limiter = Limiter(app, global_limits=["5 per second"])
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 bunny_gifs = {}
 
@@ -38,6 +40,7 @@ class BunnyGIF(restful.Resource):
 
 class RandomBunnyGIF(restful.Resource):
     def get(self):
+        print request.headers
         bunny_id_list = random.sample(bunny_gifs, 1)
         if bunny_id_list is not None:
             random_bunny_id = bunny_id_list[0]

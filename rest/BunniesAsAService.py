@@ -6,11 +6,11 @@ import random
 
 app = Flask(__name__)
 api = restful.Api(app)
-limiter = Limiter(app, global_limits=["1 per second"])
+limiter = Limiter(app, global_limits=["5 per second"])
 
 bunny_gifs = {}
 
-for existing_bunny_id in range(1, 37):
+for existing_bunny_id in range(1, 51):
     bunny_gifs[str(existing_bunny_id)] = 'http://bunnies.io/bunnies/' + str(existing_bunny_id) + '.gif'
 
 

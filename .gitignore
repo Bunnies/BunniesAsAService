@@ -3,7 +3,7 @@
 bin
 lib
 include
-.pyc
+*.pyc
 
 *.idea
 

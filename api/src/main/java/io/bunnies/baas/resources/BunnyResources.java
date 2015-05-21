@@ -14,10 +14,13 @@ public class BunnyResources {
     private List<IBunnyResource> bunnyResourceList;
     private Random random;
 
-    private static final int minBunnyID = 1;
-    private static final int maxBunnyID = 59;
+    private int minBunnyID;
+    private int maxBunnyID;
 
-    public BunnyResources() {
+    public BunnyResources(int minBunnyID, int maxBunnyID) {
+        this.minBunnyID = minBunnyID;
+        this.maxBunnyID = maxBunnyID;
+
         this.bunnyResourceMap = Maps.newHashMap();
         this.bunnyResourceList = Lists.newArrayList();
         this.random = new Random();

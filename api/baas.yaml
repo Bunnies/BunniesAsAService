@@ -1,5 +1,8 @@
 # Dropwizard configuration
 
+minBunnyID: 1
+maxBunnyID: 59
+
 server:
   applicationConnectors:
     - type: http

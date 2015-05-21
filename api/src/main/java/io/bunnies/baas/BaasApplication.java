@@ -24,8 +24,15 @@ public class BaasApplication extends Application<BaasConfiguration> {
 
     @Override
     public void run(BaasConfiguration configuration, Environment environment) throws Exception {
+        int minBunnyID = Integer.parseInt(configuration.getMinBunnyID());
+        int maxBunnyID = Integer.parseInt(configuration.getMaxBunnyID());
+
+        if (minBunnyID < 1 || maxBunnyID <= minBunnyID) {
+            throw new RuntimeException("Min or max bunny IDs are malformed");
+        }
+
         final BunnyServiceV1 resource = new BunnyServiceV1(
-                BunnyResourcesSingleton.getInstance(),
+                BunnyResourcesSingleton.getInstance(minBunnyID, maxBunnyID),
                 RequestTrackerSingleton.getInstance()
         );
 

@@ -67,9 +67,8 @@ public class BunnyServiceV1 {
 
     @GET
     @Path("/gif/random.gif")
-    @Produces(MediaType.APPLICATION_JSON)
     @Timed
-    public Response sayHelloWorld() {
+    public Response temporaryRedirectToRandomBunny() {
         IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
 
         if (bunny.hasResourceType(GifMediaType.KEY)) {

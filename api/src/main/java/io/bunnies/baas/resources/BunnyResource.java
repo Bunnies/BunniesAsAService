@@ -12,15 +12,15 @@ public class BunnyResource implements IBunnyResource {
     private Map<String, String> typeUrlMap;
     private String bunnyID;
 
-    public BunnyResource(String bunnyID) {
+    public BunnyResource(String mediaBaseUrl, String bunnyID) {
         this.bunnyID = bunnyID;
 
         this.typeUrlMap = Maps.newHashMap();
 
-        this.typeUrlMap.put(GifMediaType.KEY, new GifMediaType(this.bunnyID).constructUrl());
-        this.typeUrlMap.put(WebmMediaType.KEY, new WebmMediaType(this.bunnyID).constructUrl());
-        this.typeUrlMap.put(Mp4MediaType.KEY, new Mp4MediaType(this.bunnyID).constructUrl());
-        this.typeUrlMap.put(PosterMediaType.KEY, new PosterMediaType(this.bunnyID).constructUrl());
+        this.typeUrlMap.put(GifMediaType.KEY, new GifMediaType(this.bunnyID, mediaBaseUrl).constructUrl());
+        this.typeUrlMap.put(WebmMediaType.KEY, new WebmMediaType(this.bunnyID, mediaBaseUrl).constructUrl());
+        this.typeUrlMap.put(Mp4MediaType.KEY, new Mp4MediaType(this.bunnyID, mediaBaseUrl).constructUrl());
+        this.typeUrlMap.put(PosterMediaType.KEY, new PosterMediaType(this.bunnyID, mediaBaseUrl).constructUrl());
     }
 
     // IBunnyResource

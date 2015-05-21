@@ -3,6 +3,7 @@ package io.bunnies.baas;
 import io.bunnies.baas.resources.BunnyResourcesSingleton;
 import io.bunnies.baas.services.v1.BunnyServiceV1;
 import io.bunnies.baas.services.v1.RequestTrackerSingleton;
+import io.bunnies.baas.services.v2.BunnyServiceV2;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -31,11 +32,17 @@ public class BaasApplication extends Application<BaasConfiguration> {
             throw new RuntimeException("Min or max bunny IDs are malformed");
         }
 
-        final BunnyServiceV1 resource = new BunnyServiceV1(
-                BunnyResourcesSingleton.getInstance(minBunnyID, maxBunnyID),
+        final BunnyServiceV1 resourcev1 = new BunnyServiceV1(
+                BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), minBunnyID, maxBunnyID),
                 RequestTrackerSingleton.getInstance()
         );
 
-        environment.jersey().register(resource);
+        final BunnyServiceV2 resourcev2 = new BunnyServiceV2(
+                BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), minBunnyID, maxBunnyID),
+                RequestTrackerSingleton.getInstance()
+        );
+
+        environment.jersey().register(resourcev1);
+        environment.jersey().register(resourcev2);
     }
 }

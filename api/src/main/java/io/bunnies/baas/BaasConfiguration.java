@@ -14,6 +14,9 @@ public class BaasConfiguration extends Configuration {
     @Length(max = 3)
     private String maxBunnyID;
 
+    @NotEmpty
+    private String mediaBaseUrl;
+
     @JsonProperty
     public String getMinBunnyID() {
         return this.minBunnyID;
@@ -22,5 +25,10 @@ public class BaasConfiguration extends Configuration {
     @JsonProperty
     public String getMaxBunnyID() {
         return this.maxBunnyID;
+    }
+
+    @JsonProperty
+    public String getMediaBaseUrl() {
+        return this.mediaBaseUrl;
     }
 }

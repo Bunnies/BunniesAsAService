@@ -17,7 +17,7 @@ public class BunnyResources {
     private int minBunnyID;
     private int maxBunnyID;
 
-    public BunnyResources(int minBunnyID, int maxBunnyID) {
+    public BunnyResources(String mediaBaseUrl, int minBunnyID, int maxBunnyID) {
         this.minBunnyID = minBunnyID;
         this.maxBunnyID = maxBunnyID;
 
@@ -25,13 +25,13 @@ public class BunnyResources {
         this.bunnyResourceList = Lists.newArrayList();
         this.random = new Random();
 
-        this.initialise();
+        this.initialise(mediaBaseUrl);
     }
 
-    private void initialise() {
+    private void initialise(String mediaBaseUrl) {
         for (int i = minBunnyID; i <= maxBunnyID; i++) {
             String bunnyID = Integer.toString(i);
-            BunnyResource bunnyResource = new BunnyResource(bunnyID);
+            BunnyResource bunnyResource = new BunnyResource(mediaBaseUrl, bunnyID);
 
             this.bunnyResourceMap.put(bunnyID, bunnyResource);
             this.bunnyResourceList.add(bunnyResource);

@@ -2,6 +2,7 @@
 
 minBunnyID: 1
 maxBunnyID: 59
+mediaBaseUrl: https://an.example.domain/and/path/with/separator/
 
 server:
   applicationConnectors:

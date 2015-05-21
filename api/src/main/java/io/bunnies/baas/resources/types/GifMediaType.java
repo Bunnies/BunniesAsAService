@@ -1,16 +1,14 @@
 package io.bunnies.baas.resources.types;
 
-import io.bunnies.baas.Constants;
-
 public class GifMediaType extends ResourceMediaType {
     public static final String KEY = "GIF";
 
-    public GifMediaType(String resourceID) {
-        super(resourceID);
+    public GifMediaType(String resourceID, String mediaBaseUrl) {
+        super(resourceID, mediaBaseUrl);
     }
 
     @Override
     public String constructUrl() {
-        return Constants.MEDIA_BASE_URL + "gif/" + this.resourceID + ".gif";
+        return this.mediaBaseUrl + "gif/" + this.resourceID + ".gif";
     }
 }

@@ -65,6 +65,10 @@ public class BunnyServiceV2 {
             return this.constructBadRequestResponse("media parameter is missing or malformed");
         }
 
+        if (!this.isQueryMediaTypesValid(queryMediaTypes)) {
+            return this.constructBadRequestResponse("media parameter is missing or malformed");
+        }
+
         Set<String> mediaTypes = Sets.newHashSet(Splitter.on(',').split(queryMediaTypes.toUpperCase()));
 
         BunnyResponseV2 bunnyResponse = new BunnyResponseV2(bunny, mediaTypes, this.requestTracker.getTotalServed());
@@ -97,6 +101,18 @@ public class BunnyServiceV2 {
             Integer.parseInt(id);
         } catch (Exception e) {
             return false;
+        }
+
+        return true;
+    }
+
+    private boolean isQueryMediaTypesValid(String queryMediaTypes) {
+        for (int i = 0, length = queryMediaTypes.length(); i < length; i++) {
+            char c = queryMediaTypes.charAt(i);
+
+            if (!Character.isDigit(c) && (!Character.isLetter(c) && c != ',')) {
+                return false;
+            }
         }
 
         return true;

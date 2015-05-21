@@ -1,35 +1,12 @@
-# :rabbit: As A Service
+BunniesAsAService
+===
 
-## Introduction
-A provider of bunnies, through a REST service.
+This is an investigation in to what a Java powered backend would look like for the service.
 
-You can see the results at https://bunnies.io
+# License
+This work is licensed under the BSD 2-clause license.
 
-## Thoughts
-
-* Keep it simple
-* SSL only
-* Think about v2 - resource based
-* Swagger for REST documentation
-* JSON only responses
-* Need to think about adding metadata to each resource
- * Searching
-
-This is quite a nice source of 'good' (ie: what I agree with at face value) REST practices: http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-
-## Setup
-* Clone the repository,
-* Go in to the `api` folder,
-* Run `./gradlew clean build shadowJar`,
-* Modify `baas.yaml` to run on the ports you want,
-* Run `java -jar build/libs/BunniesAsAServiceJava-<version>-<commit>-all.jar server baas.yaml`.
-
-An Upstart script is included, in `meta/upstart`, if you want to run BunniesAsAService as a service.
-
-## License
-The source of this project is provided, subject to the BSD 2-clause license.
-
-Copyright © 2015, Sky Welch  
+Copyright © 2015, Sky Welch
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

@@ -60,16 +60,59 @@ public class BunnyServiceV2 {
         return this.serveSpecificBunny(bunny, queryMediaTypes);
     }
 
+    @GET
+    @Path("/loop/random/redirect")
+    @Timed
+    public Response redirectToRandomBunny(@QueryParam("media") String queryMediaTypes) {
+        IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
+
+        this.requestTracker.incrementTotalServed();
+
+        return this.serveTemporaryRedirectToSpecificBunny(bunny, queryMediaTypes);
+    }
+
+    @GET
+    @Path("/loop/{id}/redirect")
+    @Timed
+    public Response redirectToSpecificBunny(@PathParam("id") String id, @QueryParam("media") String queryMediaTypes) {
+        if (!this.isBunnyIDSane(id)) {
+            return this.constructBadRequestResponse("not a valid bunny ID");
+        }
+
+        IBunnyResource bunny = this.bunnyResources.getSpecificBunnyResource(id);
+        if (bunny == null) {
+            return this.constructNotFoundResponse("couldn't find that bunny");
+        }
+
+        this.requestTracker.incrementTotalServed();
+        this.requestTracker.incrementSpecificsServed();
+
+        return this.serveTemporaryRedirectToSpecificBunny(bunny, queryMediaTypes);
+    }
+
+    private Response serveTemporaryRedirectToSpecificBunny(IBunnyResource bunny, String queryMediaTypes) {
+        Set<String> mediaTypes = this.extractMediaTypes(queryMediaTypes);
+        if (mediaTypes.isEmpty()) {
+            return this.constructBadRequestResponse("media parameter is missing or malformed");
+        }
+
+        if (mediaTypes.size() > 1) {
+            return this.constructBadRequestResponse("only 1 media type is permitted for redirects");
+        }
+
+        String mediaType = (String) mediaTypes.toArray()[0];
+        if (bunny.hasResourceType(mediaType)) {
+            return this.constructTempRedirectResponse(bunny.getResourceUrl(mediaType));
+        }
+
+        return this.constructNotFoundResponse("couldn't get that type of media for that bunny");
+    }
+
     private Response serveSpecificBunny(IBunnyResource bunny, String queryMediaTypes) {
-        if (Strings.isNullOrEmpty(queryMediaTypes) || queryMediaTypes.length() > MAX_MEDIA_LENGTH) {
+        Set<String> mediaTypes = this.extractMediaTypes(queryMediaTypes);
+        if (mediaTypes.isEmpty()) {
             return this.constructBadRequestResponse("media parameter is missing or malformed");
         }
-
-        if (!this.isQueryMediaTypesValid(queryMediaTypes)) {
-            return this.constructBadRequestResponse("media parameter is missing or malformed");
-        }
-
-        Set<String> mediaTypes = Sets.newHashSet(Splitter.on(',').split(queryMediaTypes.toUpperCase()));
 
         BunnyResponseV2 bunnyResponse = new BunnyResponseV2(bunny, mediaTypes, this.requestTracker.getTotalServed());
         if (bunnyResponse.numberOfContainedFileTypes() > 0) {
@@ -81,6 +124,20 @@ public class BunnyServiceV2 {
         }
 
         return this.constructNotFoundResponse("couldn't get any media for that bunny");
+    }
+
+    private Set<String> extractMediaTypes(String queryMediaTypes) {
+        Set<String> mediaTypes = Sets.newHashSet();
+
+        if (Strings.isNullOrEmpty(queryMediaTypes) || queryMediaTypes.length() > MAX_MEDIA_LENGTH) {
+            return mediaTypes;
+        }
+
+        if (!this.isQueryMediaTypesValid(queryMediaTypes)) {
+            return mediaTypes;
+        }
+
+        return Sets.newHashSet(Splitter.on(',').split(queryMediaTypes.toUpperCase()));
     }
 
     private boolean isBunnyIDSane(String id) {

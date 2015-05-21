@@ -1,22 +1,21 @@
 package io.bunnies.baas.services.v2;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import io.bunnies.baas.resources.BunnyResources;
 import io.bunnies.baas.resources.IBunnyResource;
-import io.bunnies.baas.resources.types.GifMediaType;
+import io.bunnies.baas.resources.types.PosterMediaType;
 import io.bunnies.baas.services.v1.RequestTracker;
-import io.bunnies.baas.services.v1.responses.BunnyResponseV1;
 import io.bunnies.baas.services.v1.responses.ErrorResponseV1;
+import io.bunnies.baas.services.v2.responses.BunnyResponseV2;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.List;
+import java.util.Set;
 
 @Path("/v2")
 @Produces(MediaType.APPLICATION_JSON)
@@ -24,15 +23,28 @@ public class BunnyServiceV2 {
     private BunnyResources bunnyResources;
     private RequestTracker requestTracker;
 
+    private static final int MAX_MEDIA_LENGTH = 20;
+
     public BunnyServiceV2(BunnyResources bunnyResources, RequestTracker requestTracker) {
         this.bunnyResources = bunnyResources;
         this.requestTracker = requestTracker;
     }
 
     @GET
-    @Path("/video/{id}")
+    @Path("/loop/random")
     @Timed
-    public Response giveSpecificBunny(@PathParam("id") String id, @PathParam("filetypes") List<String> filetypes) {
+    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes) {
+        IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
+
+        this.requestTracker.incrementTotalServed();
+
+        return this.serveSpecificBunny(bunny, queryMediaTypes);
+    }
+
+    @GET
+    @Path("/loop/{id}")
+    @Timed
+    public Response giveSpecificBunny(@PathParam("id") String id, @QueryParam("media") String queryMediaTypes) {
         if (!this.isBunnyIDSane(id)) {
             return this.constructBadRequestResponse("not a valid bunny ID");
         }
@@ -42,14 +54,29 @@ public class BunnyServiceV2 {
             return this.constructNotFoundResponse("couldn't find that bunny");
         }
 
-        if (bunny.hasResourceType(GifMediaType.KEY)) {
-            this.requestTracker.incrementTotalServed();
-            this.requestTracker.incrementSpecificsServed();
+        this.requestTracker.incrementTotalServed();
+        this.requestTracker.incrementSpecificsServed();
 
-            return this.constructBunnyResponse(bunny);
+        return this.serveSpecificBunny(bunny, queryMediaTypes);
+    }
+
+    private Response serveSpecificBunny(IBunnyResource bunny, String queryMediaTypes) {
+        if (Strings.isNullOrEmpty(queryMediaTypes) || queryMediaTypes.length() > MAX_MEDIA_LENGTH) {
+            return this.constructBadRequestResponse("media parameter is missing or malformed");
         }
 
-        return this.constructNotFoundResponse("couldn't get a gif for that bunny");
+        Set<String> mediaTypes = Sets.newHashSet(Splitter.on(',').split(queryMediaTypes.toUpperCase()));
+
+        BunnyResponseV2 bunnyResponse = new BunnyResponseV2(bunny, mediaTypes, this.requestTracker.getTotalServed());
+        if (bunnyResponse.numberOfContainedFileTypes() > 0) {
+            if (!mediaTypes.contains(PosterMediaType.KEY)) {
+                bunnyResponse.addMediaType(bunny, PosterMediaType.KEY);
+            }
+
+            return this.constructBunnyResponse(bunnyResponse);
+        }
+
+        return this.constructNotFoundResponse("couldn't get any media for that bunny");
     }
 
     private boolean isBunnyIDSane(String id) {
@@ -75,11 +102,8 @@ public class BunnyServiceV2 {
         return true;
     }
 
-    private Response constructBunnyResponse(IBunnyResource bunnyResource) {
-        int totalServed = this.requestTracker.getTotalServed();
-        int specificsServed = this.requestTracker.getSpecificsServed();
-
-        return Response.status(Response.Status.OK).entity(new BunnyResponseV1(bunnyResource, totalServed, specificsServed)).build();
+    private Response constructBunnyResponse(BunnyResponseV2 bunnyResponse) {
+        return Response.status(Response.Status.OK).entity(bunnyResponse).build();
     }
 
     private Response constructNotFoundResponse(String error) {

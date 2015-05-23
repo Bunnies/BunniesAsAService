@@ -8,8 +8,8 @@ import io.bunnies.baas.resources.BunnyResources;
 import io.bunnies.baas.resources.IBunnyResource;
 import io.bunnies.baas.resources.types.PosterMediaType;
 import io.bunnies.baas.services.v1.RequestTracker;
-import io.bunnies.baas.services.v1.responses.ErrorResponseV1;
 import io.bunnies.baas.services.v2.responses.BunnyResponseV2;
+import io.bunnies.baas.services.v2.responses.ErrorResponseV2;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -179,16 +179,22 @@ public class BunnyServiceV2 {
         return Response.status(Response.Status.OK).entity(bunnyResponse).build();
     }
 
-    private Response constructNotFoundResponse(String error) {
-        return Response.status(Response.Status.NOT_FOUND).entity(new ErrorResponseV1(error)).build();
+    private Response constructNotFoundResponse(String message) {
+        return Response.status(Response.Status.NOT_FOUND).entity(
+                new ErrorResponseV2(Response.Status.NOT_FOUND.getStatusCode(), message)
+        ).build();
     }
 
-    private Response constructInternalErrorResponse(String error) {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ErrorResponseV1(error)).build();
+    private Response constructInternalErrorResponse(String message) {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(
+                new ErrorResponseV2(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), message)
+        ).build();
     }
 
-    private Response constructBadRequestResponse(String error) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponseV1(error)).build();
+    private Response constructBadRequestResponse(String message) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(
+                new ErrorResponseV2(Response.Status.BAD_REQUEST.getStatusCode(), message)
+        ).build();
     }
 
     private Response constructTempRedirectResponse(String uri) {

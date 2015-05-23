@@ -42,6 +42,7 @@ public class BaasApplication extends Application<BaasConfiguration> {
                 RequestTrackerSingleton.getInstance()
         );
 
+        environment.getApplicationContext().setErrorHandler(new JsonErrorHandler());
         environment.jersey().register(resourcev1);
         environment.jersey().register(resourcev2);
     }

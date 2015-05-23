@@ -1,5 +1,7 @@
 package io.bunnies.baas;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.bunnies.baas.services.v2.responses.ErrorResponseV2;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.http.MimeTypes;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class JsonErrorHandler extends ErrorHandler {
+
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -44,6 +47,8 @@ public class JsonErrorHandler extends ErrorHandler {
             message = HttpStatus.getMessage(code);
         }
 
-        writer.write("{\"code\":\"" + code + "\",\"message\"=\"" + message + "\"}");
+        ErrorResponseV2 response = new ErrorResponseV2(code, message);
+        ObjectMapper mapper = new ObjectMapper();
+        writer.write(mapper.writeValueAsString(response));
     }
 }

@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.Random;
 
 public class BunnyResources {
-    private Map<String, IBunnyResource> bunnyResourceMap;
-    private List<IBunnyResource> bunnyResourceList;
-    private Random random;
+    private final Map<String, IBunnyResource> bunnyResourceMap;
+    private final List<IBunnyResource> bunnyResourceList;
+    private final Random random;
 
-    private int minBunnyID;
-    private int maxBunnyID;
+    private final int minBunnyID;
+    private final int maxBunnyID;
 
     public BunnyResources(String mediaBaseUrl, int minBunnyID, int maxBunnyID) {
         this.minBunnyID = minBunnyID;

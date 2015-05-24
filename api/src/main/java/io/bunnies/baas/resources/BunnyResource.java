@@ -9,8 +9,8 @@ import io.bunnies.baas.resources.types.WebmMediaType;
 import java.util.Map;
 
 public class BunnyResource implements IBunnyResource {
-    private Map<String, String> typeUrlMap;
-    private String bunnyID;
+    private final Map<String, String> typeUrlMap;
+    private final String bunnyID;
 
     public BunnyResource(String mediaBaseUrl, String bunnyID) {
         this.bunnyID = bunnyID;

@@ -1,8 +1,8 @@
 package io.bunnies.baas.resources.types;
 
 public abstract class ResourceMediaType {
-    protected String resourceID;
-    protected String mediaBaseUrl;
+    protected final String resourceID;
+    protected final String mediaBaseUrl;
 
     public ResourceMediaType(String resourceID, String mediaBaseUrl) {
         this.resourceID = resourceID;

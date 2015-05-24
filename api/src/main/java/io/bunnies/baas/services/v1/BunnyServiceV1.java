@@ -19,8 +19,8 @@ import java.net.URI;
 @Path("/v1")
 @Produces(MediaType.APPLICATION_JSON)
 public class BunnyServiceV1 {
-    private BunnyResources bunnyResources;
-    private RequestTracker requestTracker;
+    private final BunnyResources bunnyResources;
+    private final RequestTracker requestTracker;
 
     public BunnyServiceV1(BunnyResources bunnyResources, RequestTracker requestTracker) {
         this.bunnyResources = bunnyResources;

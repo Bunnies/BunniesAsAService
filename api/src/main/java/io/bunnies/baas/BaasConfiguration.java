@@ -2,10 +2,11 @@ package io.bunnies.baas;
 
 import com.bendb.dropwizard.redis.JedisFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.internal.NotNull;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.annotation.Nonnull;
 
 public class BaasConfiguration extends Configuration {
     @NotEmpty
@@ -20,7 +21,7 @@ public class BaasConfiguration extends Configuration {
     private String mediaBaseUrl;
 
     @JsonProperty
-    @NotNull
+    @Nonnull
     private JedisFactory jedis = new JedisFactory();
 
     @JsonProperty

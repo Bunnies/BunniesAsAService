@@ -1,6 +1,8 @@
 package io.bunnies.baas;
 
+import com.bendb.dropwizard.redis.JedisFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.internal.NotNull;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -18,6 +20,10 @@ public class BaasConfiguration extends Configuration {
     private String mediaBaseUrl;
 
     @JsonProperty
+    @NotNull
+    private JedisFactory jedis = new JedisFactory();
+
+    @JsonProperty
     public String getMinBunnyID() {
         return this.minBunnyID;
     }
@@ -30,5 +36,10 @@ public class BaasConfiguration extends Configuration {
     @JsonProperty
     public String getMediaBaseUrl() {
         return this.mediaBaseUrl;
+    }
+
+    @JsonProperty
+    public JedisFactory getJedis() {
+        return this.jedis;
     }
 }

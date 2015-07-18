@@ -1,8 +1,9 @@
 package io.bunnies.baas;
 
+import io.bunnies.baas.resources.BunnyResources;
 import io.bunnies.baas.resources.BunnyResourcesSingleton;
-import io.bunnies.baas.services.v1.BunnyServiceV1;
-import io.bunnies.baas.services.v1.RequestTrackerSingleton;
+import io.bunnies.baas.services.RequestTracker;
+import io.bunnies.baas.services.RequestTrackerSingleton;
 import io.bunnies.baas.services.v2.BunnyServiceV2;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -20,7 +21,6 @@ public class BaasApplication extends Application<BaasConfiguration> {
 
     @Override
     public void initialize(Bootstrap<BaasConfiguration> bootstrap) {
-
     }
 
     @Override
@@ -32,18 +32,15 @@ public class BaasApplication extends Application<BaasConfiguration> {
             throw new RuntimeException("Min or max bunny IDs are malformed");
         }
 
-        final BunnyServiceV1 resourcev1 = new BunnyServiceV1(
-                BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), minBunnyID, maxBunnyID),
-                RequestTrackerSingleton.getInstance()
-        );
+        BunnyResources resources = BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), minBunnyID, maxBunnyID);
+        RequestTracker tracker = RequestTrackerSingleton.getInstance(configuration.getJedis().build(environment), resources);
 
         final BunnyServiceV2 resourcev2 = new BunnyServiceV2(
-                BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), minBunnyID, maxBunnyID),
-                RequestTrackerSingleton.getInstance()
+                resources,
+                tracker
         );
 
         environment.getApplicationContext().setErrorHandler(new JsonErrorHandler());
-        environment.jersey().register(resourcev1);
         environment.jersey().register(resourcev2);
     }
 }

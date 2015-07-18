@@ -50,4 +50,8 @@ public class BunnyResources {
 
         return this.bunnyResourceList.get(randomBunnyID);
     }
+
+    public List<IBunnyResource> getAllResources() {
+        return this.bunnyResourceList;
+    }
 }

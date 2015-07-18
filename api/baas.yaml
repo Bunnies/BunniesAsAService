@@ -22,3 +22,6 @@ logging:
 
   appenders:
     - type: console
+
+jedis:
+  endpoint: localhost:6379

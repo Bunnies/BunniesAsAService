@@ -8,12 +8,14 @@ import java.util.Map;
 public class BunnyResponseV2 {
     public String id;
     public Map<String, String> media;
+    public int thisServed;
     public int totalServed;
 
-    public BunnyResponseV2(IBunnyResource bunnyResource, Iterable<String> fileTypeKeys, int totalServed) {
+    public BunnyResponseV2(IBunnyResource bunnyResource, Iterable<String> fileTypeKeys, int thisServed, int totalServed) {
         this.id = bunnyResource.getBunnyID();
         this.media = Maps.newHashMap();
         this.totalServed = totalServed;
+        this.thisServed = thisServed;
 
         for (String fileType : fileTypeKeys) {
             this.addMediaType(bunnyResource, fileType);

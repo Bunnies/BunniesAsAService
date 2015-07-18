@@ -7,11 +7,13 @@ import com.google.common.collect.Sets;
 import io.bunnies.baas.resources.BunnyResources;
 import io.bunnies.baas.resources.IBunnyResource;
 import io.bunnies.baas.resources.types.PosterMediaType;
-import io.bunnies.baas.services.v1.RequestTracker;
+import io.bunnies.baas.services.RequestTracker;
 import io.bunnies.baas.services.v2.responses.BunnyResponseV2;
 import io.bunnies.baas.services.v2.responses.ErrorResponseV2;
+import redis.clients.jedis.Jedis;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -33,10 +35,10 @@ public class BunnyServiceV2 {
     @GET
     @Path("/loop/random")
     @Timed
-    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes) {
+    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes, @Context Jedis jedis) {
         IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
 
-        this.requestTracker.incrementTotalServed();
+        this.requestTracker.incrementServedAndTotal(bunny.getBunnyID());
 
         return this.serveSpecificBunny(bunny, queryMediaTypes);
     }
@@ -54,8 +56,7 @@ public class BunnyServiceV2 {
             return this.constructNotFoundResponse("couldn't find that bunny");
         }
 
-        this.requestTracker.incrementTotalServed();
-        this.requestTracker.incrementSpecificsServed();
+        this.requestTracker.incrementServedAndTotal(bunny.getBunnyID());
 
         return this.serveSpecificBunny(bunny, queryMediaTypes);
     }
@@ -66,7 +67,7 @@ public class BunnyServiceV2 {
     public Response redirectToRandomBunny(@QueryParam("media") String queryMediaTypes) {
         IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
 
-        this.requestTracker.incrementTotalServed();
+        this.requestTracker.incrementServedAndTotal(bunny.getBunnyID());
 
         return this.serveTemporaryRedirectToSpecificBunny(bunny, queryMediaTypes);
     }
@@ -84,8 +85,7 @@ public class BunnyServiceV2 {
             return this.constructNotFoundResponse("couldn't find that bunny");
         }
 
-        this.requestTracker.incrementTotalServed();
-        this.requestTracker.incrementSpecificsServed();
+        this.requestTracker.incrementServedAndTotal(bunny.getBunnyID());
 
         return this.serveTemporaryRedirectToSpecificBunny(bunny, queryMediaTypes);
     }
@@ -114,7 +114,7 @@ public class BunnyServiceV2 {
             return this.constructBadRequestResponse("media parameter is missing or malformed");
         }
 
-        BunnyResponseV2 bunnyResponse = new BunnyResponseV2(bunny, mediaTypes, this.requestTracker.getTotalServed());
+        BunnyResponseV2 bunnyResponse = new BunnyResponseV2(bunny, mediaTypes, this.requestTracker.getServed(bunny.getBunnyID()), this.requestTracker.getServed(RequestTracker.TOTAL_IDENTIFIER));
         if (bunnyResponse.numberOfContainedFileTypes() > 0) {
             if (!mediaTypes.contains(PosterMediaType.KEY)) {
                 bunnyResponse.addMediaType(bunny, PosterMediaType.KEY);
@@ -175,14 +175,14 @@ public class BunnyServiceV2 {
         return true;
     }
 
-    private Response constructBunnyResponse(BunnyResponseV2 bunnyResponse) {
-        return Response.status(Response.Status.OK).entity(bunnyResponse).build();
-    }
-
     private Response constructNotFoundResponse(String message) {
         return Response.status(Response.Status.NOT_FOUND).entity(
                 new ErrorResponseV2(Response.Status.NOT_FOUND.getStatusCode(), message)
         ).build();
+    }
+
+    private Response constructBunnyResponse(BunnyResponseV2 bunnyResponse) {
+        return Response.status(Response.Status.OK).entity(bunnyResponse).build();
     }
 
     private Response constructInternalErrorResponse(String message) {

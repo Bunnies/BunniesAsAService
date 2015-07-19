@@ -35,7 +35,7 @@ public class BunnyServiceV2 {
     @GET
     @Path("/loop/random")
     @Timed
-    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes, @Context Jedis jedis) {
+    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes) {
         IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
 
         this.requestTracker.incrementServedAndTotal(bunny.getBunnyID());

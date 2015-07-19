@@ -1,5 +1,7 @@
 package io.bunnies.baas;
 
+import com.bendb.dropwizard.redis.JedisBundle;
+import com.bendb.dropwizard.redis.JedisFactory;
 import io.bunnies.baas.resources.BunnyResources;
 import io.bunnies.baas.resources.BunnyResourcesSingleton;
 import io.bunnies.baas.services.RequestTracker;
@@ -21,6 +23,12 @@ public class BaasApplication extends Application<BaasConfiguration> {
 
     @Override
     public void initialize(Bootstrap<BaasConfiguration> bootstrap) {
+        bootstrap.addBundle(new JedisBundle<BaasConfiguration>() {
+            @Override
+            public JedisFactory getJedisFactory(BaasConfiguration configuration) {
+                return configuration.getJedis();
+            }
+        });
     }
 
     @Override

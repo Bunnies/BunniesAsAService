@@ -1,7 +1,6 @@
 # Dropwizard configuration
 
-minBunnyID: 1
-maxBunnyID: 59
+metadataPath: derived_metadata.json
 mediaBaseUrl: https://an.example.domain/and/path/with/separator/
 
 server:

@@ -10,10 +10,8 @@ import io.bunnies.baas.resources.types.PosterMediaType;
 import io.bunnies.baas.services.RequestTracker;
 import io.bunnies.baas.services.v2.responses.BunnyResponseV2;
 import io.bunnies.baas.services.v2.responses.ErrorResponseV2;
-import redis.clients.jedis.Jedis;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;

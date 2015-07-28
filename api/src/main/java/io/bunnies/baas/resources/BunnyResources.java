@@ -8,19 +8,17 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class BunnyResources {
     private final Map<String, IBunnyResource> bunnyResourceMap;
     private final List<IBunnyResource> bunnyResourceList;
     private final Random random;
 
-    private final int minBunnyID;
-    private final int maxBunnyID;
+    private final Set<String> bunnyIds;
 
-    public BunnyResources(String mediaBaseUrl, int minBunnyID, int maxBunnyID) {
-        this.minBunnyID = minBunnyID;
-        this.maxBunnyID = maxBunnyID;
-
+    public BunnyResources(String mediaBaseUrl, Set<String> bunnyIds) {
+        this.bunnyIds = bunnyIds;
         this.bunnyResourceMap = Maps.newHashMap();
         this.bunnyResourceList = Lists.newArrayList();
         this.random = new Random();
@@ -29,11 +27,10 @@ public class BunnyResources {
     }
 
     private void initialise(String mediaBaseUrl) {
-        for (int i = minBunnyID; i <= maxBunnyID; i++) {
-            String bunnyID = Integer.toString(i);
-            BunnyResource bunnyResource = new BunnyResource(mediaBaseUrl, bunnyID);
+        for (String bunnyId : this.bunnyIds) {
+            BunnyResource bunnyResource = new BunnyResource(mediaBaseUrl, bunnyId);
 
-            this.bunnyResourceMap.put(bunnyID, bunnyResource);
+            this.bunnyResourceMap.put(bunnyId, bunnyResource);
             this.bunnyResourceList.add(bunnyResource);
         }
     }

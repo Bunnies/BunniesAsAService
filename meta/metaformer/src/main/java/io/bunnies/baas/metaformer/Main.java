@@ -3,6 +3,7 @@ package io.bunnies.baas.metaformer;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +60,8 @@ public class Main {
         LOGGER.info(" {} webms: {}", webmResources.getResourceIds().size(), webmResources.getResourceIds());
         LOGGER.info(" {} mp4s: {}", mp4Resources.getResourceIds().size(), mp4Resources.getResourceIds());
 
-        Map<String, BunnyResource> resources = Maps.newHashMap();
+        Map<String, DerivedBunnyResource> resources = Maps.newHashMap();
+        Map<String, SpecifiedBunnyResource> specifiedResources = Maps.newHashMap();
 
         for (String id : gifResources.getResourceIds()) {
             BufferedImage image;
@@ -82,18 +85,48 @@ public class Main {
                 return;
             }
 
-            resources.put(id, new BunnyResource(width, height, aspect_ratio));
+            resources.put(id, new DerivedBunnyResource(width, height, aspect_ratio));
+            specifiedResources.put(id, new SpecifiedBunnyResource(""));
         }
 
-        DerivedMetadata metadata = new DerivedMetadata(resources);
+        DerivedMetadata derivedMetadata = new DerivedMetadata(resources);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String derivedMetadata = gson.toJson(metadata);
+
+        LOGGER.info("Attempting to load existing specified metadata...");
+
+        try {
+            String existingSpecifiedMetadataString = new String(Files.readAllBytes(Paths.get("").resolve("specified_metadata.json")));
+
+            LOGGER.info("Loaded existing specified metadata file successfully");
+            SpecifiedMetadata existingSpecifiedMetadata = gson.fromJson(existingSpecifiedMetadataString, SpecifiedMetadata.class);
+
+            if (existingSpecifiedMetadata.getResources().size() > 0) {
+                specifiedResources.putAll(existingSpecifiedMetadata.getResources());
+
+                LOGGER.info("Loaded existing specified metadata successfully");
+            }
+        } catch (IOException e) {
+            LOGGER.warn("Couldn't find or load existing specified metadata, starting from scratch");
+        }
+
+        SpecifiedMetadata specifiedMetadata = new SpecifiedMetadata(specifiedResources);
+
+        String derivedMetadataString = gson.toJson(derivedMetadata);
+        String specifiedMetadataString = gson.toJson(specifiedMetadata);
 
         LOGGER.info("Writing derived_metadata.json");
 
         try {
-            Files.write(Paths.get("").resolve("derived_metadata.json"), derivedMetadata.getBytes(Charsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(Paths.get("").resolve("derived_metadata.json"), derivedMetadataString.getBytes(Charsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            LOGGER.error("Failed to write out derived_metadata.json: {}", e);
+        }
+
+        LOGGER.info("Writing specified_metadata.json");
+
+        try {
+            Files.write(Paths.get("").resolve("specified_metadata.json"), specifiedMetadataString.getBytes(Charsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             LOGGER.error("Failed to write out derived_metadata.json: {}", e);
         }

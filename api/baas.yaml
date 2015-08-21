@@ -1,6 +1,7 @@
 # Dropwizard configuration
 
-metadataPath: derived_metadata.json
+derivedMetadataPath: derived_metadata.json
+specifiedMetadataPath: specified_metadata.json
 mediaBaseUrl: https://an.example.domain/and/path/with/separator/
 
 server:

@@ -7,6 +7,10 @@ public interface IBunnyResource {
 
     boolean hasResourceType(String resourceKey);
 
+    double getAspectRatio();
+
     @Nullable
     String getResourceUrl(String resourceKey);
+
+    String getBunnySource();
 }

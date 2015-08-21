@@ -3,13 +3,13 @@ package io.bunnies.baas.metadata;
 import java.util.Map;
 
 public class DerivedMetadata {
-    private Map<String, BunnyResourceMetadata> resources;
+    private Map<String, DerivedBunnyResourceMetadata> resources;
 
-    public DerivedMetadata(Map<String, BunnyResourceMetadata> resources) {
+    public DerivedMetadata(Map<String, DerivedBunnyResourceMetadata> resources) {
         this.resources = resources;
     }
 
-    public Map<String, BunnyResourceMetadata> getResources() {
+    public Map<String, DerivedBunnyResourceMetadata> getResources() {
         return this.resources;
     }
 }

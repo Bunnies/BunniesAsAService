@@ -11,9 +11,18 @@ import java.util.Map;
 public class BunnyResource implements IBunnyResource {
     private final Map<String, String> typeUrlMap;
     private final String bunnyID;
+    private final double aspectRatio;
+    private final String source;
 
-    public BunnyResource(String mediaBaseUrl, String bunnyID) {
+    public BunnyResource(String mediaBaseUrl, String bunnyID, double aspectRatio, String source) {
         this.bunnyID = bunnyID;
+        this.aspectRatio = aspectRatio;
+
+        if (source.isEmpty()) {
+            this.source = "unknown";
+        } else {
+            this.source = source;
+        }
 
         this.typeUrlMap = Maps.newHashMap();
 
@@ -36,7 +45,17 @@ public class BunnyResource implements IBunnyResource {
     }
 
     @Override
+    public double getAspectRatio() {
+        return this.aspectRatio;
+    }
+
+    @Override
     public String getResourceUrl(String resourceKey) {
         return this.typeUrlMap.getOrDefault(resourceKey, null);
+    }
+
+    @Override
+    public String getBunnySource() {
+        return this.source;
     }
 }

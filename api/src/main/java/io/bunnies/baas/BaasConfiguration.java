@@ -9,7 +9,10 @@ import javax.annotation.Nonnull;
 
 public class BaasConfiguration extends Configuration {
     @NotEmpty
-    private String metadataPath;
+    private String derivedMetadataPath;
+
+    @NotEmpty
+    private String specifiedMetadataPath;
 
     @NotEmpty
     private String mediaBaseUrl;
@@ -19,8 +22,13 @@ public class BaasConfiguration extends Configuration {
     private JedisFactory jedis = new JedisFactory();
 
     @JsonProperty
-    public String getMetadataPath() {
-        return this.metadataPath;
+    public String getDerivedMetadataPath() {
+        return this.derivedMetadataPath;
+    }
+
+    @JsonProperty
+    public String getSpecifiedMetadataPath() {
+        return this.specifiedMetadataPath;
     }
 
     @JsonProperty

@@ -5,6 +5,7 @@ import com.bendb.dropwizard.redis.JedisFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.bunnies.baas.metadata.DerivedMetadata;
+import io.bunnies.baas.metadata.SpecifiedMetadata;
 import io.bunnies.baas.resources.BunnyResources;
 import io.bunnies.baas.resources.BunnyResourcesSingleton;
 import io.bunnies.baas.services.RequestTracker;
@@ -44,11 +45,13 @@ public class BaasApplication extends Application<BaasConfiguration> {
     @Override
     public void run(BaasConfiguration configuration, Environment environment) throws Exception {
         Gson gson = new GsonBuilder().create();
-        DerivedMetadata metadata = gson.fromJson(Files.newBufferedReader(Paths.get("").resolve(configuration.getMetadataPath())), DerivedMetadata.class);
+        DerivedMetadata derivedMetadata = gson.fromJson(Files.newBufferedReader(Paths.get("").resolve(configuration.getDerivedMetadataPath())), DerivedMetadata.class);
+        SpecifiedMetadata specifiedMetadata = gson.fromJson(Files.newBufferedReader(Paths.get("").resolve(configuration.getSpecifiedMetadataPath())), SpecifiedMetadata.class);
 
-        LOGGER.info("Loaded {} resources from metadata: {}", metadata.getResources().size(), metadata.getResources().keySet());
+        LOGGER.info("Loaded {} resources from derived metadata: {}", derivedMetadata.getResources().size(), derivedMetadata.getResources().keySet());
+        LOGGER.info("Loaded {} resources from specified metadata: {}", specifiedMetadata.getResources().size(), specifiedMetadata.getResources().keySet());
 
-        BunnyResources resources = BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), metadata.getResources().keySet());
+        BunnyResources resources = BunnyResourcesSingleton.getInstance(configuration.getMediaBaseUrl(), derivedMetadata, specifiedMetadata);
         RequestTracker tracker = RequestTrackerSingleton.getInstance(configuration.getJedis().build(environment), resources);
 
         final BunnyServiceV2 resourcev2 = new BunnyServiceV2(

@@ -33,8 +33,36 @@ public class BunnyServiceV2 {
     @GET
     @Path("/loop/random")
     @Timed
-    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes) {
-        IBunnyResource bunny = this.bunnyResources.getRandomBunnyResource();
+    public Response giveRandomBunny(@QueryParam("media") String queryMediaTypes,
+                                    @QueryParam("widthHint") String widthHint,
+                                    @QueryParam("heightHint") String heightHint) {
+        IBunnyResource bunny;
+
+        boolean hasWidthHint, hasHeightHint;
+        hasWidthHint = widthHint != null && !widthHint.isEmpty();
+        hasHeightHint = heightHint != null && !heightHint.isEmpty();
+
+        if (!hasWidthHint && !hasHeightHint) {
+            bunny = this.bunnyResources.getRandomBunnyResource();
+        } else if (hasWidthHint && hasHeightHint) {
+            int width;
+            int height;
+
+            try {
+                width = Integer.parseInt(widthHint);
+                height = Integer.parseInt(heightHint);
+
+                if (width <= 0 || height <= 0 || width > 999 || height > 999) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                return this.constructBadRequestResponse("widthHint or heightHint were malformed");
+            }
+
+            bunny = this.bunnyResources.getRandomBunnyResource(width, height);
+        } else {
+            return this.constructBadRequestResponse("both widthHint and heightHint must either be present or omitted");
+        }
 
         this.requestTracker.incrementServedAndTotal(bunny.getBunnyID());
 

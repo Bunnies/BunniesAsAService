@@ -1,5 +1,7 @@
 import org.gradle.api.Project
 import org.gradle.jvm.tasks.Jar
+import com.github.jengelman.gradle.plugins.shadow.ShadowExtension
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 val baasVersion by project
 
@@ -39,8 +41,15 @@ val buildNumberAddition = if(project.hasProperty("BUILD_NUMBER")) { ".${project.
 version = "$baasVersion$buildNumberAddition"
 group = "io.bunnies.baas"
 
+shadowJar {
+    mergeServiceFiles()
+    exclude("META-INF/*.DSA")
+    exclude("META-INF/*.RSA")
+}
+
 jar {
     manifest.attributes += "Main-Class" to "io.bunnies.baas.BaasApplication"
 }
 
 fun Project.jar(setup: Jar.() -> Unit) = (project.tasks.getByName("jar") as Jar).setup()
+fun Project.shadowJar(setup: ShadowJar.() -> Unit) = (project.tasks.getByName("shadowJar") as ShadowJar).setup()

@@ -3,6 +3,7 @@ import org.gradle.jvm.tasks.Jar
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 val baasVersion by project
+val dropwizardVersion by project
 
 buildscript {
     repositories {
@@ -28,9 +29,9 @@ repositories {
 
 dependencies {
     compile(kotlinModule("stdlib"))
-    compile("io.dropwizard:dropwizard-core:0.9.3")
+    compile("io.dropwizard:dropwizard-core:$dropwizardVersion")
     compile("com.google.code.gson:gson:2.3.1")
-    compile("com.bendb.dropwizard:dropwizard-redis:0.9.1-1")
+    compile("com.bendb.dropwizard:dropwizard-redis:$dropwizardVersion-0")
 
     testCompile("junit:junit:4.11")
 }

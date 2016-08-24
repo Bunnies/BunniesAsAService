@@ -1,6 +1,5 @@
 import org.gradle.api.Project
 import org.gradle.jvm.tasks.Jar
-import com.github.jengelman.gradle.plugins.shadow.ShadowExtension
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 val baasVersion by project

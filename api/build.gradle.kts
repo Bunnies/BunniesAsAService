@@ -30,7 +30,7 @@ repositories {
 dependencies {
     compile(kotlinModule("stdlib"))
     compile("io.dropwizard:dropwizard-core:$dropwizardVersion")
-    compile("com.google.code.gson:gson:2.3.1")
+    compile("com.google.code.gson:gson:2.7")
     compile("com.bendb.dropwizard:dropwizard-redis:$dropwizardVersion-0")
 
     testCompile("junit:junit:4.11")

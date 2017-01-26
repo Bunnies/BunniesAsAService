@@ -82,7 +82,17 @@ object Main {
                 return
             }
 
-            resources.put(id, DerivedBunnyResource(width, height, aspect_ratio))
+            val sizes = mutableMapOf<String, Long>()
+
+            val gif = gifResources.resourceFiles[id]
+            val webm = webmResources.resourceFiles[id]
+            val mp4 = mp4Resources.resourceFiles[id]
+
+            if(gif != null) { sizes += ("gif" to gif.length()) }
+            if(webm != null) { sizes += ("webm" to webm.length()) }
+            if(mp4 != null) { sizes += ("mp4" to mp4.length()) }
+
+            resources.put(id, DerivedBunnyResource(width, height, aspect_ratio, sizes))
             specifiedResources.put(id, SpecifiedBunnyResource(""))
         }
 
